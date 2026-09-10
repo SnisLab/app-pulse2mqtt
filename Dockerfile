@@ -1,8 +1,5 @@
 ARG TARGETARCH
 ARG BUILD_FROM=ghcr.io/home-assistant/base:3.24
-ARG PULSE2MQTT_IMAGE=ghcr.io/snislab/pulse2mqtt:0.4.0
-
-FROM ${PULSE2MQTT_IMAGE} AS pulse2mqtt
 
 FROM ${BUILD_FROM} AS base
 
@@ -15,15 +12,15 @@ ENV HA_ARCH=aarch64
 FROM base-${TARGETARCH}
 
 ARG BUILD_VERSION=dev
-ARG PULSE2MQTT_IMAGE
 
-COPY --from=pulse2mqtt /usr/local/bin/pulse2mqtt /usr/bin/pulse2mqtt
+COPY binaries/ /tmp/pulse2mqtt-binaries/
 COPY rootfs /
 
-RUN chmod 0755 \
-    /usr/bin/pulse2mqtt \
+RUN install -D -m 0755 "/tmp/pulse2mqtt-binaries/${TARGETARCH}/pulse2mqtt" /usr/bin/pulse2mqtt \
+    && chmod 0755 \
     /etc/services.d/pulse2mqtt/run \
-    /etc/services.d/pulse2mqtt/finish
+    /etc/services.d/pulse2mqtt/finish \
+    && rm -rf /tmp/pulse2mqtt-binaries
 
 LABEL \
     io.hass.name="Pulse2MQTT" \
@@ -32,5 +29,4 @@ LABEL \
     io.hass.version="${BUILD_VERSION}" \
     io.hass.arch="${HA_ARCH}" \
     org.opencontainers.image.source="https://github.com/SnisLab/app-pulse2mqtt" \
-    org.opencontainers.image.base.name="${PULSE2MQTT_IMAGE}" \
     org.opencontainers.image.licenses="MIT"
