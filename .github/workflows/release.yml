@@ -33,7 +33,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  APP_IMAGE_DOCKERHUB: docker.io/snislab/app-pulse2mqtt
+  APP_IMAGE_DOCKERHUB: docker.io/${{ vars.DOCKERHUB_USERNAME }}/app-pulse2mqtt
   APP_IMAGE_GHCR: ghcr.io/snislab/app-pulse2mqtt
   SOURCE_REPOSITORY: SnisLab/pulse2mqtt
 
