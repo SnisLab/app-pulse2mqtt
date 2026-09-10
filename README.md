@@ -9,7 +9,7 @@ released Pulse2MQTT APK packages and builds the Home Assistant image itself.
 Images are published to Docker Hub and GHCR:
 
 ```text
-docker.io/snislab/app-pulse2mqtt
+docker.io/<DOCKERHUB_USERNAME>/app-pulse2mqtt
 ghcr.io/snislab/app-pulse2mqtt
 ```
 
@@ -17,5 +17,5 @@ The `release-built` dispatch from `SnisLab/pulse2mqtt` starts this workflow.
 Stable releases publish `latest` and a version tag. Manual edge builds publish
 `edge` and a version tag. See `DOCS.md` for configuration details.
 
-The workflow requires `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` secrets. GHCR
-publishing uses the repository `GITHUB_TOKEN`.
+The workflow requires the organization variable `DOCKERHUB_USERNAME` and the
+`DOCKERHUB_TOKEN` secret. GHCR publishing uses the repository `GITHUB_TOKEN`.
