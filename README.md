@@ -4,7 +4,7 @@ Home Assistant packaging for
 [SnisLab/pulse2mqtt](https://github.com/SnisLab/pulse2mqtt).
 
 This repository contains no application source. Its workflow downloads the
-released Pulse2MQTT binaries and builds the Home Assistant image itself.
+released Pulse2MQTT APK packages and builds the Home Assistant image itself.
 
 Images are published to Docker Hub and GHCR:
 

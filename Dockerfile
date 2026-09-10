@@ -14,14 +14,15 @@ FROM base-${TARGETARCH}
 ARG TARGETARCH
 ARG BUILD_VERSION=dev
 
-COPY binaries/ /tmp/pulse2mqtt-binaries/
+COPY packages/ /tmp/pulse2mqtt-packages/
 COPY rootfs /
 
-RUN install -D -m 0755 "/tmp/pulse2mqtt-binaries/${TARGETARCH}/pulse2mqtt" /usr/bin/pulse2mqtt \
+RUN apk add --no-cache --allow-untrusted \
+    "/tmp/pulse2mqtt-packages/${TARGETARCH}/pulse2mqtt_linux_${TARGETARCH}.apk" \
     && chmod 0755 \
     /etc/services.d/pulse2mqtt/run \
     /etc/services.d/pulse2mqtt/finish \
-    && rm -rf /tmp/pulse2mqtt-binaries
+    && rm -rf /tmp/pulse2mqtt-packages
 
 LABEL \
     io.hass.name="Pulse2MQTT" \

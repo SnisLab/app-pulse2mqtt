@@ -76,4 +76,4 @@ jq -n \
     }' > /tmp/pulse2mqtt/settings.yaml
 
 bashio::log.info "Starting Pulse2MQTT"
-exec env PULSE2MQTT_CONFIG=/tmp/pulse2mqtt/settings.yaml /usr/bin/pulse2mqtt
+exec env PULSE2MQTT_CONFIG=/tmp/pulse2mqtt/settings.yaml /usr/local/bin/pulse2mqtt

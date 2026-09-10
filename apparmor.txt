@@ -25,5 +25,5 @@ profile pulse2mqtt flags=(attach_disconnected,mediate_deleted) {
   /tmp/** rwk,
   /data/** r,
 
-  /usr/bin/pulse2mqtt rix,
+  /usr/local/bin/pulse2mqtt rix,
 }

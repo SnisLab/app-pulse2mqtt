@@ -76,22 +76,17 @@ jobs:
           echo "tag=${tag}" >> "${GITHUB_OUTPUT}"
           echo "channel=${channel}" >> "${GITHUB_OUTPUT}"
 
-      - name: Download Pulse2MQTT binaries
+      - name: Download Pulse2MQTT APKs
         shell: bash
         env:
           RELEASE_TAG: ${{ steps.release.outputs.tag }}
         run: |
           set -euo pipefail
-          mkdir -p binaries/amd64 binaries/arm64
+          mkdir -p packages/amd64 packages/arm64
           for arch in amd64 arm64; do
-            archive="pulse2mqtt_linux_${arch}.tar.gz"
-            url="https://github.com/${SOURCE_REPOSITORY}/releases/download/${RELEASE_TAG}/${archive}"
-            curl --fail --location --retry 3 "${url}" --output "${RUNNER_TEMP}/${archive}"
-            mkdir -p "${RUNNER_TEMP}/pulse2mqtt-${arch}"
-            tar -xzf "${RUNNER_TEMP}/${archive}" -C "${RUNNER_TEMP}/pulse2mqtt-${arch}"
-            binary="$(find "${RUNNER_TEMP}/pulse2mqtt-${arch}" -type f -name pulse2mqtt -print -quit)"
-            test -n "${binary}"
-            cp "${binary}" "binaries/${arch}/pulse2mqtt"
+            package="pulse2mqtt_linux_${arch}.apk"
+            url="https://github.com/${SOURCE_REPOSITORY}/releases/download/${RELEASE_TAG}/${package}"
+            curl --fail --location --retry 3 "${url}" --output "packages/${arch}/${package}"
           done
 
       - name: Run Home Assistant app linter
