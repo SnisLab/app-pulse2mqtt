@@ -127,6 +127,52 @@ jobs:
             ${{ env.APP_IMAGE_DOCKERHUB }}:${{ steps.release.outputs.version }}
             ${{ env.APP_IMAGE_GHCR }}:${{ steps.release.outputs.version }}
 
+      - name: Update Home Assistant edge catalog
+        if: ${{ steps.release.outputs.channel == 'edge' }}
+        env:
+          GH_TOKEN: ${{ secrets.HOME_ASSISTANT_APPS_TOKEN }}
+          VERSION: ${{ steps.release.outputs.version }}
+          SHA: ${{ github.sha }}
+          IMAGE: ${{ env.APP_IMAGE_GHCR }}:edge
+        run: |
+          set -euo pipefail
+          test -n "${GH_TOKEN}"
+          gh api --method POST repos/SnisLab/home-assistant-apps-edge/dispatches --input - <<JSON
+          {
+            "event_type": "app-released",
+            "client_payload": {
+              "repository": "app-pulse2mqtt",
+              "version": "${VERSION}",
+              "tag": "edge",
+              "sha": "${SHA}",
+              "image": "${IMAGE}"
+            }
+          }
+          JSON
+
+      - name: Update Home Assistant stable catalog
+        if: ${{ steps.release.outputs.channel == 'latest' }}
+        env:
+          GH_TOKEN: ${{ secrets.HOME_ASSISTANT_APPS_TOKEN }}
+          VERSION: ${{ steps.release.outputs.version }}
+          SHA: ${{ github.sha }}
+          IMAGE: ${{ env.APP_IMAGE_GHCR }}:${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+          test -n "${GH_TOKEN}"
+          gh api --method POST repos/SnisLab/home-assistant-apps/dispatches --input - <<JSON
+          {
+            "event_type": "app-released",
+            "client_payload": {
+              "repository": "app-pulse2mqtt",
+              "version": "${VERSION}",
+              "tag": "v${VERSION}",
+              "sha": "${SHA}",
+              "image": "${IMAGE}"
+            }
+          }
+          JSON
+
       - name: Update Docker Hub description
         uses: peter-evans/dockerhub-description@v4
         with:
