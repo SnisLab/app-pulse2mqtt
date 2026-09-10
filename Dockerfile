@@ -11,6 +11,7 @@ ENV HA_ARCH=aarch64
 
 FROM base-${TARGETARCH}
 
+ARG TARGETARCH
 ARG BUILD_VERSION=dev
 
 COPY binaries/ /tmp/pulse2mqtt-binaries/
