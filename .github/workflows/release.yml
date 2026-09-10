@@ -126,3 +126,12 @@ jobs:
             ${{ env.APP_IMAGE_GHCR }}:${{ steps.release.outputs.channel }}
             ${{ env.APP_IMAGE_DOCKERHUB }}:${{ steps.release.outputs.version }}
             ${{ env.APP_IMAGE_GHCR }}:${{ steps.release.outputs.version }}
+
+      - name: Update Docker Hub description
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: ${{ vars.DOCKERHUB_USERNAME }}/app-pulse2mqtt
+          short-description: Home Assistant app for Pulse2MQTT
+          readme-filepath: ./README.md
