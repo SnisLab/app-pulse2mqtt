@@ -57,6 +57,14 @@ jobs:
           echo "tag=${tag}" >> "${GITHUB_OUTPUT}"
           echo "channel=latest" >> "${GITHUB_OUTPUT}"
 
+      - name: Import application changelog
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          set -euo pipefail
+          url="https://raw.githubusercontent.com/${SOURCE_REPOSITORY}/${RELEASE_TAG}/CHANGELOG.md"
+          curl --fail --location --retry 3 "${url}" --output CHANGELOG.md
+
       - name: Update app version
         id: app-version
         env:
@@ -64,13 +72,13 @@ jobs:
         run: |
           set -euo pipefail
           sed -i -E "s/^version: .*/version: \"${VERSION}\"/" config.yaml
-          if git diff --quiet -- config.yaml; then
+          if git diff --quiet -- config.yaml CHANGELOG.md; then
             echo "sha=$(git rev-parse HEAD)" >> "${GITHUB_OUTPUT}"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add config.yaml
+          git add config.yaml CHANGELOG.md
           git commit -m "Update Home Assistant app version to ${VERSION}"
           git push origin HEAD:main
           echo "sha=$(git rev-parse HEAD)" >> "${GITHUB_OUTPUT}"
