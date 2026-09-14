@@ -58,12 +58,14 @@ jobs:
           echo "channel=latest" >> "${GITHUB_OUTPUT}"
 
       - name: Update app version
+        id: app-version
         env:
           VERSION: ${{ steps.release.outputs.version }}
         run: |
           set -euo pipefail
           sed -i -E "s/^version: .*/version: \"${VERSION}\"/" config.yaml
           if git diff --quiet -- config.yaml; then
+            echo "sha=$(git rev-parse HEAD)" >> "${GITHUB_OUTPUT}"
             exit 0
           fi
           git config user.name "github-actions[bot]"
@@ -71,6 +73,7 @@ jobs:
           git add config.yaml
           git commit -m "Update Home Assistant app version to ${VERSION}"
           git push origin HEAD:main
+          echo "sha=$(git rev-parse HEAD)" >> "${GITHUB_OUTPUT}"
 
       - name: Download Pulse2MQTT APKs
         shell: bash
@@ -127,7 +130,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.HOME_ASSISTANT_APPS_TOKEN }}
           VERSION: ${{ steps.release.outputs.version }}
-          SHA: ${{ github.sha }}
+          SHA: ${{ steps.app-version.outputs.sha }}
           IMAGE: ${{ env.APP_IMAGE_GHCR }}:${{ steps.release.outputs.version }}
         run: |
           set -euo pipefail
