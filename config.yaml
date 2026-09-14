@@ -10,7 +10,7 @@ init: false
 stage: experimental
 services:
   - mqtt:want
-image: ghcr.io/snislab/app-pulse2mqtt
+image: docker.io/dersni/app-pulse2mqtt
 options:
   pulse_host: ""
   pulse_username: admin
