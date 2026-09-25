@@ -16,6 +16,7 @@ options:
   pulse_username: admin
   pulse_password: ""
   pulse_node: 1
+  pulse_version: ""
   battery_profile: regulated_1_5v
   data_topic: pulse2mqtt/data
   metrics_topic: pulse2mqtt/metrics
@@ -27,6 +28,7 @@ schema:
   pulse_username: str
   pulse_password: password
   pulse_node: int(1,)
+  pulse_version: str?
   battery_profile: list(alkaline|lfb_aa|nimh_1_2v|regulated_1_5v)
   data_topic: str
   metrics_topic: str
